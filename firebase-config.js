@@ -4,7 +4,7 @@ const firebaseConfig = {
   projectId: "udaanfin-ai",
   storageBucket: "udaanfin-ai.firebasestorage.app",
   messagingSenderId: "1042865685468",
-  appId: "1:1042865685468:web:380966fbe598092e76c519"
+  appId: "1:1042865685468:web:380966fbe598092e76c519",
   measurementId: "G-7PPPL7TJ44"
 };
 
