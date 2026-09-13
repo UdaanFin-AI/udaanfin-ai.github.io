@@ -46,6 +46,33 @@ window.UdaanFin_FINANCE_DATA = {
       "phone": ""
     },
     {
+      "bank": "Punjab National Bank (PNB)",
+      "type": "Personal Loan",
+      "amount": "Up to ₹20 lakh for eligible pre-approved borrowers",
+      "source_status": "Official PNB reference",
+      "notes": "Verify current official terms",
+      "official_url": "https://www.pnbindia.in/",
+      "phone": ""
+    },
+    {
+      "bank": "Punjab National Bank (PNB)",
+      "type": "Car Loan",
+      "amount": "Up to ₹1 crore",
+      "source_status": "Official PNB reference",
+      "notes": "Verify current official terms",
+      "official_url": "https://www.pnbindia.in/",
+      "phone": ""
+    },
+    {
+      "bank": "Punjab National Bank (PNB)",
+      "type": "Education Loan",
+      "amount": "Available under multiple PNB education-loan schemes",
+      "source_status": "Official PNB reference",
+      "notes": "Verify current official terms",
+      "official_url": "https://www.pnbindia.in/",
+      "phone": ""
+    },
+    {
       "bank": "RBL Bank",
       "type": "Home Loan",
       "amount": "Up to ₹10 crore",
