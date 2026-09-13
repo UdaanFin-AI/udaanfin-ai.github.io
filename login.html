@@ -1,8 +1,365 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Welcome — UdaanFin AI</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet"><link rel="stylesheet" href="login.css"></head><body><div class="login-glow glow-one"></div><div class="login-glow glow-two"></div><nav><a class="brand" href="index.html"><i>✦</i> UdaanFin <b>AI</b></a><div><button id="theme-toggle" class="theme" aria-label="Toggle dark mode">☾</button><a class="home" href="index.html">Home ↗</a></div></nav><main><section class="welcome"><p class="eyebrow">PRIVATE, GUIDED DISCOVERY</p><h1>Your next chapter<br>starts <em>here.</em></h1><p>Sign in once to unlock your personalised loan finder. It takes less than a minute.</p><div class="steps"><span class="active">01 <b>Phone</b></span><i></i><span>02 <b>Verify</b></span><i></i><span>03 <b>Name</b></span></div><div class="privacy">✦ We do not save your Aadhaar or PAN details.</div></section><section class="login-card"><div class="card-mark">✦</div><p class="eyebrow">SECURE SIGN IN</p><h2 id="title">Let’s get you in.</h2><p id="copy">Enter your mobile number to receive a one-time password.</p><div id="recaptcha-container"></div><form id="phone-form"><label>Mobile number<div class="phone-field"><span>+91</span><input id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" required></div></label><button class="button">Send secure OTP <span>→</span></button></form><form id="otp-form" class="hidden"><label>Enter the OTP<div class="otp"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"></div></label><p class="demo-note">Demo OTP: <b>26092</b></p><button class="button">Verify OTP <span>→</span></button><button id="change" class="link" type="button">← Change mobile number</button></form><form id="name-form" class="hidden"><label>What should we call you?<input id="name" maxlength="60" autocomplete="name" placeholder="Your name" required></label><button class="button">Enter UdaanFin <span>→</span></button></form><small class="terms">Prototype only: no SMS is sent and no real identity verification occurs.</small></section></main>
+<!doctype html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>Welcome — UdaanFin AI</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="login.css">
+
+</head>
+
+
+<body>
+
+<div class="login-glow glow-one"></div>
+
+<div class="login-glow glow-two"></div>
+
+
+<nav>
+
+<a class="brand"
+href="index.html">
+
+<i>✦</i> UdaanFin <b>AI</b>
+
+</a>
+
+
+<div>
+
+<button
+id="theme-toggle"
+class="theme"
+aria-label="Toggle dark mode">
+
+☾
+
+</button>
+
+
+<a
+class="home"
+href="index.html">
+
+Home ↗
+
+</a>
+
+</div>
+
+</nav>
+
+
+<main>
+
+
+<section class="welcome">
+
+<p class="eyebrow">
+PRIVATE, GUIDED DISCOVERY
+</p>
+
+
+<h1>
+Your next chapter<br>
+starts <em>here.</em>
+</h1>
+
+
+<p>
+Sign in once to unlock your personalised loan finder.
+It takes less than a minute.
+</p>
+
+
+<div class="steps">
+
+<span class="active">
+01 <b>Sign in</b>
+</span>
+
+<i></i>
+
+<span>
+02 <b>Profile</b>
+</span>
+
+<i></i>
+
+<span>
+03 <b>Discover</b>
+</span>
+
+</div>
+
+
+<div class="privacy">
+✦ We do not save your Aadhaar or PAN details.
+</div>
+
+</section>
+
+
+
+<section class="login-card">
+
+
+<div class="card-mark">
+✦
+</div>
+
+
+<p class="eyebrow">
+SECURE SIGN IN
+</p>
+
+
+<h2 id="title">
+Welcome to UdaanFin AI.
+</h2>
+
+
+<p id="copy">
+Choose a secure way to continue.
+</p>
+
+
+
+<!-- GOOGLE LOGIN -->
+
+<button
+id="google-login"
+class="button"
+type="button">
+
+Continue with Google
+
+<span>→</span>
+
+</button>
+
+
+
+<div style="
+display:flex;
+align-items:center;
+gap:12px;
+margin:22px 0;
+color:#8492a9;
+font-size:11px;
+font-weight:700;
+">
+
+<span style="
+height:1px;
+background:#dce5f3;
+flex:1;
+"></span>
+
+OR
+
+<span style="
+height:1px;
+background:#dce5f3;
+flex:1;
+"></span>
+
+</div>
+
+
+
+<!-- QR LOGIN -->
+
+<button
+id="qr-login"
+class="button"
+type="button">
+
+Login with QR
+
+<span>▣</span>
+
+</button>
+
+
+
+<!-- QR BOX -->
+
+<div
+id="qr-box"
+class="hidden"
+style="
+margin-top:20px;
+padding:22px;
+border:1px solid #dce5f3;
+border-radius:18px;
+text-align:center;
+background:#f9fbff;
+">
+
+<h3 style="
+margin:0 0 8px;
+font-family:Manrope,sans-serif;
+">
+
+Scan to continue
+
+</h3>
+
+
+<p style="
+font-size:12px;
+line-height:1.6;
+color:#70809d;
+margin:0 0 18px;
+">
+
+Scan this QR code with your phone to open
+UdaanFin AI.
+
+</p>
+
+
+<div
+id="qrcode"
+style="
+display:flex;
+justify-content:center;
+margin:15px auto;
+">
+
+</div>
+
+
+<p style="
+font-size:10px;
+color:#8492a9;
+line-height:1.5;
+">
+
+Prototype QR login — scanning opens the
+UdaanFin AI experience.
+
+</p>
+
+
+<button
+id="qr-continue"
+class="button"
+type="button"
+style="
+margin-top:10px;
+">
+
+Continue on this device
+
+<span>→</span>
+
+</button>
+
+
+<button
+id="qr-close"
+class="link"
+type="button"
+style="
+margin-top:10px;
+">
+
+← Back
+
+</button>
+
+</div>
+
+
+
+<!-- NEW USER NAME -->
+
+<form
+id="name-form"
+class="hidden">
+
+<label>
+
+What should we call you?
+
+<input
+id="name"
+maxlength="60"
+autocomplete="name"
+placeholder="Your name"
+required>
+
+</label>
+
+
+<button
+class="button"
+type="submit">
+
+Enter UdaanFin
+
+<span>→</span>
+
+</button>
+
+</form>
+
+
+<small class="terms">
+
+Google authentication is provided securely through Firebase.
+QR login is currently a prototype feature.
+
+</small>
+
+
+</section>
+
+</main>
+
+
+
+<!-- FIREBASE -->
+
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
 
+
+<!-- QR CODE LIBRARY -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<!-- YOUR FIREBASE CONFIG -->
+
 <script src="firebase-config.js"></script>
+
+
 <script src="i18n.js"></script>
+
+
 <script src="login.js"></script>
+
+
+</body>
+
+</html>
