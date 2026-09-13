@@ -133,29 +133,19 @@ if (googleButton) {
 
     } catch (error) {
 
-      console.error(error);
+  console.error("Firebase Google Login Error:", error);
 
-      if (error.code === 'auth/popup-closed-by-user') {
+  alert(
+    "Firebase error:\n\n" +
+    "Code: " + (error.code || "unknown") +
+    "\n\nMessage: " + (error.message || "unknown")
+  );
 
-        alert('Google sign-in was cancelled.');
+  googleButton.disabled = false;
 
-      } else if (error.code === 'auth/unauthorized-domain') {
-
-        alert(
-          'This website domain is not authorized in Firebase. Please add udaanfin-ai.github.io under Firebase Authentication → Settings → Authorized domains.'
-        );
-
-      } else {
-
-        alert(
-          'Google sign-in could not be completed. Please try again.'
-        );
-      }
-
-      googleButton.disabled = false;
-      googleButton.innerHTML =
-        'Continue with Google <span>→</span>';
-    }
+  googleButton.innerHTML =
+    'Continue with Google <span>→</span>';
+}
   });
 }
 
