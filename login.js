@@ -1,8 +1,10 @@
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
+const params = new URLSearchParams(location.search);
+
 const next =
-  new URLSearchParams(location.search).get('next') || 'index.html';
+  params.get('next') || 'loan-finder.html';
 
 
 // =============================
