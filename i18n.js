@@ -12,6 +12,7 @@ function applyLanguage(lang){
  document.querySelectorAll('[placeholder]').forEach(el=>{const p=el.getAttribute('placeholder');if(d[p])el.setAttribute('placeholder',d[p])});
  document.title='स्कीमसेवा AI';
  document.querySelectorAll('.language-toggle').forEach(b=>b.textContent='English');
+ window.refreshIndiaLocations?.();
 }
 function installLanguageToggle(){
  document.querySelectorAll('.language-toggle').forEach(x=>x.remove());
