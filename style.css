@@ -373,3 +373,135 @@ body.dark .landing .hero-marquee::before {
 .landing .marquee-banner::after {
   content: none !important;
 }
+/* =========================================================
+   UDAANFIN AI — BANK RESULT CARDS
+   ========================================================= */
+
+#loan-results.match-grid,
+#scheme-results.match-grid,
+#live-results.match-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* Individual bank / scheme block */
+#loan-results .match-card,
+#scheme-results .match-card,
+#live-results .match-card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 230px;
+  padding: 24px;
+  margin: 0;
+  border: 1px solid #d6e1f0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(23, 54, 94, 0.08);
+}
+
+/* Bank / loan type */
+#loan-results .match-kind,
+#scheme-results .match-kind,
+#live-results .match-kind {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--blue);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* Bank name */
+#loan-results .match-card h3,
+#scheme-results .match-card h3,
+#live-results .match-card h3 {
+  margin: 5px 0 12px;
+  color: var(--ink);
+  font: 800 20px Manrope, sans-serif;
+  line-height: 1.3;
+}
+
+/* Card text */
+#loan-results .match-card p,
+#scheme-results .match-card p,
+#live-results .match-card p {
+  margin: 6px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Buttons stay at bottom */
+#loan-results .match-actions,
+#scheme-results .match-actions,
+#live-results .match-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+/* Buttons */
+#loan-results .match-actions a,
+#loan-results .match-actions button,
+#scheme-results .match-actions a,
+#scheme-results .match-actions button,
+#live-results .match-actions a,
+#live-results .match-actions button {
+  border-radius: 999px;
+}
+
+/* Hover effect */
+#loan-results .match-card,
+#scheme-results .match-card,
+#live-results .match-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#loan-results .match-card:hover,
+#scheme-results .match-card:hover,
+#live-results .match-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(23, 54, 94, 0.13);
+}
+
+/* Dark mode */
+.dark #loan-results .match-card,
+.dark #scheme-results .match-card,
+.dark #live-results .match-card {
+  background: #0c1a33;
+  border-color: #2b4669;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.dark #loan-results .match-card h3,
+.dark #scheme-results .match-card h3,
+.dark #live-results .match-card h3 {
+  color: #edf3ff;
+}
+
+.dark #loan-results .match-card p,
+.dark #scheme-results .match-card p,
+.dark #live-results .match-card p {
+  color: #b6c4db;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  #loan-results.match-grid,
+  #scheme-results.match-grid,
+  #live-results.match-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #loan-results .match-card,
+  #scheme-results .match-card,
+  #live-results .match-card {
+    padding: 20px;
+  }
+}
