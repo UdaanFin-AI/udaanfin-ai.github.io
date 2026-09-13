@@ -4,5 +4,21 @@ setTheme(localStorage.getItem('UdaanFin-theme')||'light'); $('#theme-toggle')?.a
 function logout(){localStorage.removeItem('UdaanFin-user');localStorage.removeItem('UdaanFin-phone');sessionStorage.clear();location.href='index.html'}
 const login=$('#login'),user=localStorage.getItem('UdaanFin-user');
 if(user&&login){const first=user.trim().split(/\s+/)[0]||'User'; const account=document.createElement('div');account.className='account-menu';account.innerHTML=`<button class="account-button" aria-expanded="false"><span class="account-hi">Hi ${first}</span><small>Your info</small><b>⌄</b></button><div class="account-popover"><a href="profile.html">Your information</a><button type="button" class="logout-button">Log out</button></div>`;login.replaceWith(account);const button=account.querySelector('.account-button');button.onclick=e=>{e.stopPropagation();const open=account.classList.toggle('open');button.setAttribute('aria-expanded',String(open))};account.querySelector('.logout-button').onclick=logout;document.addEventListener('click',()=>account.classList.remove('open'))}
-$$('.launch-finder').forEach(link=>link.addEventListener('click',e=>{if(user)return;e.preventDefault();location.href='login.html?next=loan-finder.html'}));
+$$('.launch-finder').forEach(link => {
+  link.addEventListener('click', e => {
+
+    const currentUser = localStorage.getItem('UdaanFin-user');
+
+    if (currentUser) {
+      // Already logged in — go directly to the Finder
+      e.preventDefault();
+      location.href = 'loan-finder.html';
+      return;
+    }
+
+    // Not logged in — go to Google login first
+    e.preventDefault();
+    location.href = 'login.html?next=loan-finder.html';
+  });
+});
 const targets=$$('.journey-grid article,.purpose-stack article,.trust-section>div,.section-intro');const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in-view');observer.unobserve(e.target)}}),{threshold:.14});targets.forEach(el=>observer.observe(el));
