@@ -4,10 +4,16 @@ const $$ = s => [...document.querySelectorAll(s)];
 const next =
   new URLSearchParams(location.search).get('next') || 'index.html';
 
+
+// =============================
+// THEME
+// =============================
+
 function theme(mode) {
   document.body.classList.toggle('dark', mode === 'dark');
 
   const button = $('#theme-toggle');
+
   if (button) {
     button.textContent = mode === 'dark' ? '☀' : '☾';
   }
@@ -26,144 +32,188 @@ $('#theme-toggle')?.addEventListener('click', () => {
 });
 
 
+// =============================
+// FORM DISPLAY
+// =============================
+
 function show(id, title, copy) {
-  $$('form').forEach(form => form.classList.add('hidden'));
 
-  $(id).classList.remove('hidden');
+  $$('form').forEach(form => {
+    form.classList.add('hidden');
+  });
 
-  $('#title').textContent = title;
-  $('#copy').textContent = copy;
-}
+  const target = $(id);
 
-
-// -----------------------------
-// Firebase phone authentication
-// -----------------------------
-
-let confirmationResult = null;
-let recaptchaVerifier = null;
-
-function setupRecaptcha() {
-  if (recaptchaVerifier) return;
-
-  recaptchaVerifier =
-    new firebase.auth.RecaptchaVerifier(
-      'recaptcha-container',
-      {
-        size: 'invisible'
-      }
-    );
-}
-
-
-// SEND OTP
-$('#phone-form').onsubmit = async e => {
-
-  e.preventDefault();
-
-  const phone =
-    $('#phone').value.replace(/\D/g, '');
-
-  if (phone.length !== 10) {
-    alert('Please enter a valid 10-digit mobile number.');
-    return;
+  if (target) {
+    target.classList.remove('hidden');
   }
 
-  const phoneNumber = '+91' + phone;
+  if ($('#title')) {
+    $('#title').textContent = title;
+  }
 
-  try {
+  if ($('#copy')) {
+    $('#copy').textContent = copy;
+  }
+}
 
-    setupRecaptcha();
 
-    confirmationResult =
-      await auth.signInWithPhoneNumber(
-        phoneNumber,
-        recaptchaVerifier
+// =============================
+// GOOGLE LOGIN
+// =============================
+
+const googleButton = $('#google-login');
+
+if (googleButton) {
+
+  googleButton.addEventListener('click', async () => {
+
+    googleButton.disabled = true;
+    googleButton.innerHTML = 'Signing in…';
+
+    try {
+
+      const provider =
+        new firebase.auth.GoogleAuthProvider();
+
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
+      const result =
+        await auth.signInWithPopup(provider);
+
+      const user = result.user;
+
+      const userRef =
+        db.collection('users').doc(user.uid);
+
+      const userDoc =
+        await userRef.get();
+
+      if (userDoc.exists) {
+
+        const data = userDoc.data();
+
+        const name =
+          data.name ||
+          user.displayName ||
+          'User';
+
+        localStorage.setItem(
+          'UdaanFin-user',
+          name
+        );
+
+        localStorage.setItem(
+          'UdaanFin-phone',
+          data.phone || ''
+        );
+
+        sessionStorage.setItem(
+          'show-welcome',
+          '1'
+        );
+
+        location.href = next;
+
+      } else {
+
+        show(
+          '#name-form',
+          'Welcome to UdaanFin AI.',
+          'Just tell us your name so we can personalise your experience.'
+        );
+
+        $('#name').value =
+          user.displayName || '';
+
+        $('#name').focus();
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      if (error.code === 'auth/popup-closed-by-user') {
+
+        alert('Google sign-in was cancelled.');
+
+      } else if (error.code === 'auth/unauthorized-domain') {
+
+        alert(
+          'This website domain is not authorized in Firebase. Please add udaanfin-ai.github.io under Firebase Authentication → Settings → Authorized domains.'
+        );
+
+      } else {
+
+        alert(
+          'Google sign-in could not be completed. Please try again.'
+        );
+      }
+
+      googleButton.disabled = false;
+      googleButton.innerHTML =
+        'Continue with Google <span>→</span>';
+    }
+  });
+}
+
+
+// =============================
+// SAVE NEW GOOGLE USER
+// =============================
+
+const nameForm = $('#name-form');
+
+if (nameForm) {
+
+  nameForm.onsubmit = async e => {
+
+    e.preventDefault();
+
+    const name =
+      $('#name').value.trim();
+
+    if (!name) {
+
+      alert('Please enter your name.');
+
+      return;
+    }
+
+    const user =
+      auth.currentUser;
+
+    if (!user) {
+
+      alert(
+        'Your login session expired. Please sign in again.'
       );
 
-    sessionStorage.setItem(
-      'UdaanFin-phone',
-      phone
-    );
+      location.reload();
 
-    show(
-      '#otp-form',
-      'Verify your number.',
-      'Enter the OTP sent to +91 ' +
-      phone
-    );
-
-    $('.otp input').focus();
-
-  } catch (error) {
-
-    console.error(error);
-
-    alert(
-      'Unable to send OTP. Please try again.'
-    );
-
-    if (recaptchaVerifier) {
-      recaptchaVerifier.clear();
-      recaptchaVerifier = null;
+      return;
     }
-  }
-};
 
+    try {
 
-// OTP boxes
-$$('.otp input').forEach((input, index, all) => {
+      await db
+        .collection('users')
+        .doc(user.uid)
+        .set({
 
-  input.oninput = () => {
+          name: name,
 
-    input.value =
-      input.value.replace(/\D/g, '').slice(0, 1);
+          phone: '',
 
-    if (
-      input.value &&
-      all[index + 1]
-    ) {
-      all[index + 1].focus();
-    }
-  };
+          email: user.email || '',
 
-});
+          createdAt:
+            firebase.firestore.FieldValue.serverTimestamp()
 
+        }, { merge: true });
 
-// VERIFY OTP
-$('#otp-form').onsubmit = async e => {
-
-  e.preventDefault();
-
-  const otp =
-    $$('.otp input')
-      .map(input => input.value)
-      .join('');
-
-  if (otp.length !== 6) {
-    alert('Please enter the 6-digit OTP.');
-    return;
-  }
-
-  try {
-
-    const result =
-      await confirmationResult.confirm(otp);
-
-    const user = result.user;
-
-    const userRef =
-      db.collection('users').doc(user.uid);
-
-    const userDoc =
-      await userRef.get();
-
-    if (userDoc.exists) {
-
-      const data = userDoc.data();
-
-      const name =
-        data.name || 'User';
 
       localStorage.setItem(
         'UdaanFin-user',
@@ -172,7 +222,7 @@ $('#otp-form').onsubmit = async e => {
 
       localStorage.setItem(
         'UdaanFin-phone',
-        data.phone || ''
+        ''
       );
 
       sessionStorage.setItem(
@@ -182,86 +232,85 @@ $('#otp-form').onsubmit = async e => {
 
       location.href = next;
 
-    } else {
+    } catch (error) {
 
-      show(
-        '#name-form',
-        'Lovely. What’s your name?',
-        'We’ll use it to personalise your UdaanFin AI experience.'
+      console.error(error);
+
+      alert(
+        'We could not save your account. Please try again.'
       );
+    }
+  };
+}
 
-      $('#name').focus();
+
+// =============================
+// QR LOGIN — PROTOTYPE
+// =============================
+
+const qrButton = $('#qr-login');
+
+if (qrButton) {
+
+  qrButton.addEventListener('click', () => {
+
+    const qrBox = $('#qr-box');
+
+    if (!qrBox) return;
+
+    qrBox.classList.remove('hidden');
+
+    qrButton.classList.add('hidden');
+
+    const qrTarget =
+      window.location.origin +
+      window.location.pathname.replace(
+        'login.html',
+        'index.html'
+      ) +
+      '?qr-login=prototype';
+
+    const qrContainer =
+      $('#qrcode');
+
+    if (
+      qrContainer &&
+      typeof QRCode !== 'undefined'
+    ) {
+
+      qrContainer.innerHTML = '';
+
+      new QRCode(qrContainer, {
+        text: qrTarget,
+        width: 190,
+        height: 190,
+        correctLevel: QRCode.CorrectLevel.M
+      });
     }
 
-  } catch (error) {
+  });
+}
 
-    console.error(error);
 
-    alert(
-      'Incorrect or expired OTP. Please try again.'
+// =============================
+// QR PROTOTYPE CONTINUE
+// =============================
+
+const qrContinue =
+  $('#qr-continue');
+
+if (qrContinue) {
+
+  qrContinue.addEventListener('click', () => {
+
+    localStorage.setItem(
+      'UdaanFin-qr-demo',
+      'verified'
     );
-  }
-};
-
-
-// CHANGE PHONE
-$('#change').onclick = () => {
-
-  if (recaptchaVerifier) {
-    recaptchaVerifier.clear();
-    recaptchaVerifier = null;
-  }
-
-  show(
-    '#phone-form',
-    'Let’s get you in.',
-    'Enter your mobile number to receive a one-time password.'
-  );
-};
-
-
-// SAVE NEW USER
-$('#name-form').onsubmit = async e => {
-
-  e.preventDefault();
-
-  const name =
-    $('#name').value.trim();
-
-  if (!name) return;
-
-  const user =
-    auth.currentUser;
-
-  if (!user) {
-    alert('Your session expired. Please log in again.');
-    location.reload();
-    return;
-  }
-
-  try {
-
-    const phone =
-      user.phoneNumber || '';
-
-    await db
-      .collection('users')
-      .doc(user.uid)
-      .set({
-        name: name,
-        phone: phone,
-        createdAt:
-          firebase.firestore.FieldValue.serverTimestamp()
-      });
 
     localStorage.setItem(
       'UdaanFin-user',
-      name
-    );
-
-    localStorage.setItem(
-      'UdaanFin-phone',
-      phone
+      'QR User'
     );
 
     sessionStorage.setItem(
@@ -270,13 +319,24 @@ $('#name-form').onsubmit = async e => {
     );
 
     location.href = next;
+  });
+}
 
-  } catch (error) {
 
-    console.error(error);
+// =============================
+// QR CLOSE
+// =============================
 
-    alert(
-      'We could not save your account. Please try again.'
-    );
-  }
-};
+const qrClose =
+  $('#qr-close');
+
+if (qrClose) {
+
+  qrClose.addEventListener('click', () => {
+
+    $('#qr-box')?.classList.add('hidden');
+
+    qrButton?.classList.remove('hidden');
+
+  });
+}
